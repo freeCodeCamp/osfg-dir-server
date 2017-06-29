@@ -13,8 +13,8 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const crypto = require('crypto');
-// const assert = require('assert');
 const request = require('request');
+const fetch = require('node-fetch');
 const fs = require('fs');
 const showdown = require('showdown');
 const converter = new showdown.Converter();
@@ -24,23 +24,38 @@ const app = express();
 app.use(bodyParser.json());
 
 app.post('/event', (req, res) => {
-  if (verifySignature(req.body, req.headers) && isReadmeUpdated(req.body)) {
+  // if (verifySignature(req.body, req.headers) && isReadmeUpdated(req.body)) {
+  if (true) {
     const url1 = getReadmeUrl(req.body);
     const url2 = getContributorUrl(req.body);
-    fetchReadmeText(url1, text => {
-      getContributors(url2, data => {
-        const contributors = buildContributorHtml(data);
-        const body = converter.makeHtml(text);
-        const name = req.body.repository.name;
-        const page = buildPage(name, body, contributors);
-        writeHtmlFile(page);
-        const encoded = base64EncodeString(page);
-        pushFileToRepo(encoded, name);
+    let rawReadme;
+
+    fetch(url1)
+      .then(verifyText)
+      .then(text => {
+        rawReadme = text;
+        const options = {
+          url2,
+          headers: {
+            'User-Agent': 'osfg-request',
+          },
+        };
+        return fetch(url2, options);
+      })
+      .then(verifyJson)
+      .then(data => {
+        console.log(data);
+        // const contributors = buildContributorHtml(data);
+        // const body = converter.makeHtml(rawReadme);
+        // const name = req.body.repository.name;
+        // const page = buildPage(name, body, contributors);
+        // writeHtmlFile(page);
+        // const encoded = base64EncodeString(page);
+        // pushFileToRepo(encoded, name);
+      })
+      .catch(err => {
+        console.log(err);
       });
-    });
-    console.log({ message: 'README.md created or updated' });
-  } else {
-    console.log({ message: 'POST no README update in commit' });
   }
 });
 
@@ -67,13 +82,12 @@ function verifySignature(body, headers) {
 function isReadmeUpdated(body) {
   // Checks Modifications to the README.md file in the Master Branch
   const readme = 'README.md';
-
-  const isMasterBranch = /master$/.test(body.ref);
-  console.log(isMasterBranch);
+  // UNCOMMENT for Deployment
+  // const isMasterBranch = /master$/.test(body.ref);
+  const isMasterBranch = true;
   if (isMasterBranch) {
     body.commits.forEach(commit => {
-      if (commit.modified === readme || commit.added === readme)
-        return true;
+      if (commit.modified === readme || commit.added === readme) return true;
     });
   }
   return false;
@@ -86,7 +100,7 @@ function getReadmeUrl(body) {
   return root + repo + file;
 }
 
-function fetchReadmeText(url, callback) {
+/*function fetchReadmeText(url, callback) {
   request(url, (err, res, body) => {
     if (err) {
       console.log({ message: 'Failed to fetch README', error: err });
@@ -103,14 +117,14 @@ function fetchReadmeText(url, callback) {
     });
     return callback(err);
   });
-}
+}*/
 
 function getContributorUrl(body) {
   const repo = body.repository.name;
   return `https://api.github.com/repos/freecodecamp/${repo}/contributors`;
 }
 
-function getContributors(url, callback) {
+/* function getContributors(url, callback) {
   const options = {
     url,
     headers: {
@@ -130,15 +144,10 @@ function getContributors(url, callback) {
       });
     }
   });
-}
+}*/
 
 function buildContributorHtml(data) {
   let contributors = [];
-  try {
-    contributors = JSON.parse(data);
-  } catch (err) {
-    console.log({ message: 'JSON parse failed on contributors' });
-  }
   let markup = '';
   contributors.forEach(c => {
     markup += `
@@ -250,4 +259,30 @@ function pushFileToRepo(content, repo) {
       }
     });
   });
+}
+
+function verifyText(res) {
+  if (
+    res.statusCode === 200 &&
+    res.headers['content-type'] === 'text/plain; charset=utf-8'
+  ) {
+    return res.body;
+  }
+  const err = new Error(
+    `Invalid Response from Github Request. Status Code: ${res.statusCode}`
+  );
+  throw err;
+}
+
+function verifyJson(res) {
+  if (
+    res.statusCode === 200 &&
+    res.headers['content-type'] === 'application/json; charset=utf-8'
+  ) {
+    return JSON.parse(res.body);
+  }
+  const err = new Error(
+    `Invalid Response from Github Request. Status Code: ${res.statusCode}`
+  );
+  throw err;
 }
