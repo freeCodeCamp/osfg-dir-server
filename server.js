@@ -25,30 +25,33 @@ app.use(bodyParser.json());
 app.post('/event', (req, res) => {
   // if (verifySignature(req.body, req.headers) && isReadmeUpdated(req.body)) {
   if (true) {
-    const url1 = getReadmeUrl(req.body);
-    const url2 = getContributorUrl(req.body);
+    const readmeURL = getReadmeUrl(req.body);
+    const contributorsURL = getContributorUrl(req.body);
     let rawReadme;
 
-    fetch(url1)
+    fetch(readmeURL)
       .then(verifyText)
+      // Fetch Contributors
       .then(text => {
-        console.log(text);
         rawReadme = text;
+        /* Header Inclusion necessary for the 
+           GitHub API https://developer.github.com/v3/#user-agent-required */
         const options = {
-          url2,
           headers: {
-            'User-Agent': 'osfg-request',
+            'User-Agent': 'open-source-for-good-directory',
           },
         };
-        return fetch(url2, options);
+        return fetch(contributorsURL, options);
       })
       .then(verifyJson)
-      .then(data => {
-        console.log(data);
-        // const contributors = buildContributorHtml(data);
-        // const body = converter.makeHtml(rawReadme);
-        // const name = req.body.repository.name;
-        // const page = buildPage(name, body, contributors);
+      .then(contributorsData => {
+        const contributors = buildContributorHtml(contributorsData);
+        console.log(contributors);
+        const body = converter.makeHtml(rawReadme);
+        console.log(body);
+        const name = req.body.repository.name;
+        const page = buildPage(name, body, contributors);
+        console.log(page);
         // writeHtmlFile(page);
         // const encoded = base64EncodeString(page);
         // pushFileToRepo(encoded, name);
@@ -100,65 +103,24 @@ function getReadmeUrl(body) {
   return root + repo + file;
 }
 
-/*function fetchReadmeText(url, callback) {
-  request(url, (err, res, body) => {
-    if (err) {
-      console.log({ message: 'Failed to fetch README', error: err });
-    }
-    if (
-      res.statusCode === 200 &&
-      res.headers['content-type'] === 'text/plain; charset=utf-8'
-    ) {
-      return callback(body);
-    }
-    console.log({
-      message: 'Invalid response from GitHub request',
-      status: res.statusCode,
-    });
-    return callback(err);
-  });
-}*/
-
 function getContributorUrl(body) {
   const repo = body.repository.name;
   return `https://api.github.com/repos/freecodecamp/${repo}/contributors`;
 }
 
-/* function getContributors(url, callback) {
-  const options = {
-    url,
-    headers: {
-      'User-Agent': 'osfg-request',
-    },
-  };
-  request.get(options, (err, res, body) => {
-    if (
-      res.statusCode === 200 &&
-      res.headers['content-type'] === 'application/json; charset=utf-8'
-    ) {
-      callback(body);
-    } else {
-      console.log({
-        message: 'Invalid response from GitHub request',
-        status: res.statusCode,
-      });
-    }
-  });
-}*/
-
 function buildContributorHtml(data) {
   let contributors = [];
-  let markup = '';
+  let html = '';
   contributors.forEach(c => {
-    markup += `
+    html += `
     <div class="contributer">
-      <a class="contributer-link" href=${c.url}>
-        <img className="contributer-img" src=${c.avatar_url}/>
+      <a class="contributer-link" href="${c.url}">
+        <img className="contributer-img" src="${c.avatar_url}"/>
       </a>
     </div>
     `;
   });
-  return markup;
+  return html;
 }
 
 function buildPage(name, body, contributors) {
@@ -262,7 +224,10 @@ function base64EncodeString(string) {
 }*/
 
 function verifyText(res) {
-  if (res.ok && res.headers.get('content-type') === 'text/plain; charset=utf-8') {
+  if (
+    res.ok &&
+    res.headers.get('content-type') === 'text/plain; charset=utf-8'
+  ) {
     return res.text();
   }
   const err = new Error(
@@ -272,7 +237,10 @@ function verifyText(res) {
 }
 
 function verifyJson(res) {
-  if (res.ok && res.headers.get('content-type') === 'application/json; charset=utf-8') {
+  if (
+    res.ok &&
+    res.headers.get('content-type') === 'application/json; charset=utf-8'
+  ) {
     return res.json();
   }
   const err = new Error(
