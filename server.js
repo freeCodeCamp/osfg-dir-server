@@ -68,14 +68,14 @@ function isReadmeUpdated(body) {
   // Checks Modifications to the README.md file in the Master Branch
   const readme = 'README.md';
 
-  // CHECK FOR MASTER BRANCH
-  console.log(body.ref);
-
-
-  body.commits.forEach(commit => {
-    if (commit.modified === readme || commit.added === readme)
-      return true;
-  });
+  const isMasterBranch = /master$/.test(body.ref);
+  console.log(isMasterBranch);
+  if (isMasterBranch) {
+    body.commits.forEach(commit => {
+      if (commit.modified === readme || commit.added === readme)
+        return true;
+    });
+  }
   return false;
 }
 
