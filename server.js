@@ -109,8 +109,7 @@ function getContributorsURL(body) {
   return `https://api.github.com/repos/freecodecamp/${repo}/contributors`;
 }
 
-function buildContributorHtml(data) {
-  let contributors = [];
+function buildContributorHtml(contributors) {
   let html = '';
   contributors.forEach(c => {
     html += `
