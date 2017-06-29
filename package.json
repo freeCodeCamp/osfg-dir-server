@@ -1,0 +1,31 @@
+{
+  "name": "fcc-directory-server",
+  "version": "0.1.0",
+  "description": "FreeCodeCamp Directory Server",
+  "main": "server.js",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "crypto": "0.0.3",
+    "express": "^4.15.3",
+    "request": "^2.81.0",
+    "showdown": "^1.7.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": "8.1.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/juandaco/fcc-directory-server.git"
+  },
+  "author": "Juan D. Acosta",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/juandaco/fcc-directory-server/issues"
+  },
+  "homepage": "https://github.com/juandaco/fcc-directory-server#readme"
+}
