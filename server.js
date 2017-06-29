@@ -50,12 +50,19 @@ app.post('/event', (req, res) => {
         */
         const contributors = buildContributorHtml(contributorsData);
         const body = converter.makeHtml(rawReadme);
-        const name = req.body.repository.name;
-        const page = buildPage(name, body, contributors);
-        
+        const repoName = req.body.repository.name;
+        const page = buildPage(repoName, body, contributors);
+
+        /*
+          Processing the File
+        */
         writeHtmlFile(page);
-        // const encoded = base64EncodeString(page);
-        // pushFileToRepo(encoded, name);
+        const encodedPage = base64EncodeString(page);
+
+        /* 
+          Pushing to GitHub Repo
+        */
+        pushFileToRepo(encodedPage, repoName);
       })
       .catch(err => {
         console.log(err);
@@ -71,6 +78,9 @@ const server = app.listen(process.env.PORT, () => {
   console.log(`App is listening on port ${server.address().port}`);
 });
 
+/*
+  Verifications
+*/
 function verifySignature(body, headers) {
   const signature = headers['x-hub-signature'];
   const hash = `sha1=${crypto
@@ -97,6 +107,9 @@ function isReadmeUpdated(body) {
   return false;
 }
 
+/*
+  Data Parsing
+*/
 function getReadmeUrl(body) {
   const root = 'https://raw.githubusercontent.com/';
   const repo = body.repository.full_name;
@@ -109,6 +122,35 @@ function getContributorsURL(body) {
   return `https://api.github.com/repos/freecodecamp/${repo}/contributors`;
 }
 
+function verifyText(res) {
+  if (
+    res.ok &&
+    res.headers.get('content-type') === 'text/plain; charset=utf-8'
+  ) {
+    return res.text();
+  }
+  const err = new Error(
+    `Invalid Response from Github Request. Status Code: ${res.statusCode}`
+  );
+  throw err;
+}
+
+function verifyJson(res) {
+  if (
+    res.ok &&
+    res.headers.get('content-type') === 'application/json; charset=utf-8'
+  ) {
+    return res.json();
+  }
+  const err = new Error(
+    `Invalid Response from Github Request. Status Code: ${res.statusCode}`
+  );
+  throw err;
+}
+
+/*
+  Building WebPage
+*/
 function buildContributorHtml(contributors) {
   let html = '';
   contributors.forEach(c => {
@@ -148,13 +190,16 @@ function buildPage(name, body, contributors) {
     `;
 }
 
+/*
+  File Processing
+*/
 function writeHtmlFile(html) {
   const newPath = path.join(__dirname, '/views/index.html');
-  try{
+  try {
     fs.writeFile(newPath, html, 'utf-8', err => {
       if (err) throw err;
-    }) ;
-  } catch(err) {
+    });
+  } catch (err) {
     console.log({ message: 'Error writing file', error: err });
   }
 }
@@ -163,89 +208,55 @@ function base64EncodeString(string) {
   return new Buffer(string).toString('base64');
 }
 
-/*function getFileSha(url, callback) {
+/*
+  Pushing to GitHub Repo
+*/
+function pushFileToRepo(webPage, repo) {
+  const url = `https://api.github.com/repos/freecodecamp/open-source-for-good-directory/contents/docs/${repo}/index.html`;
   const options = {
-    url,
     headers: {
       'User-Agent': 'osfg-request',
     },
   };
-  request.get(options, (err, res, body) => {
-    if (
-      res.statusCode === 200 &&
-      res.headers['content-type'] === 'application/json; charset=utf-8'
-    ) {
-      try {
-        const data = JSON.parse(body);
-        callback(data.sha);
-      } catch (error) {
-        console.log({ message: 'JSON parse failed on SHA' });
-      }
-    } else {
-      callback('');
-    }
-  });
-}*/
 
-/*function pushFileToRepo(content, repo) {
-  const url = `https://api.github.com/repos/freecodecamp/open-source-for-good-directory/contents/docs/${repo}/index.html`;
-  getFileSha(url, sha => {
-    const options = {
-      url,
-      headers: {
-        'User-Agent': 'osfg-request',
-        Authorization: `token ${process.env.GITHUB_TOKEN}`,
-      },
-      method: 'PUT',
-      json: {
-        path: 'index.html',
-        sha,
-        message: `Camper Bot updating README.md for ${repo}`,
-        committer: {
-          name: 'Camper Bot',
-          email: 'placeholder@test.com',
+  // Getting the SHA Sum
+  fetch(url, options)
+    .then(verifyJson)
+    .then(resp => {
+      const sha = resp;
+      const options = {
+        headers: {
+          'User-Agent': 'osfg-request',
+          Authorization: `token ${process.env.GITHUB_TOKEN}`,
         },
-        content,
-        branch: 'master',
-      },
-    };
-    request(options, (err, res, body) => {
-      if (res.statusCode === 200) {
-        console.log({ message: `${repo} index.html updated` });
-      } else if (res.statusCode === 201) {
-        console.log({ message: `${repo} index.html created` });
+        method: 'PUT',
+        json: {
+          path: 'index.html',
+          sha,
+          message: `Camper Bot updating README.md for ${repo}`,
+          committer: {
+            name: 'Camper Bot',
+            email: 'placeholder@test.com',
+          },
+          content: webPage,
+          branch: 'master',
+        },
+      };
+      return fetch(url, options);
+    })
+    .then(res => {
+      let log = {};
+      if (res.status === 200) {
+        log.message =`${repo} index.html updated`;
+      } else if (res.status === 201) {
+        log.message = `${repo} index.html created`;
       } else {
-        console.log({
+        log = {
           message: 'Invalid response from GitHub file creation',
           status: res.statusCode,
-        });
+        };
       }
-    });
-  });
-}*/
-
-function verifyText(res) {
-  if (
-    res.ok &&
-    res.headers.get('content-type') === 'text/plain; charset=utf-8'
-  ) {
-    return res.text();
-  }
-  const err = new Error(
-    `Invalid Response from Github Request. Status Code: ${res.statusCode}`
-  );
-  throw err;
-}
-
-function verifyJson(res) {
-  if (
-    res.ok &&
-    res.headers.get('content-type') === 'application/json; charset=utf-8'
-  ) {
-    return res.json();
-  }
-  const err = new Error(
-    `Invalid Response from Github Request. Status Code: ${res.statusCode}`
-  );
-  throw err;
+      console.log(log);
+    })
+    .catch(err => console.log(err));
 }
