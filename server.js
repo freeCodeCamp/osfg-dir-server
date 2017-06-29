@@ -24,7 +24,6 @@ const app = express();
 app.use(bodyParser.json());
 
 app.post('/event', (req, res) => {
-  console.log(isReadmeUpdated(req.body));
   if (verifySignature(req.body, req.headers) && isReadmeUpdated(req.body)) {
     const url1 = getReadmeUrl(req.body);
     const url2 = getContributorUrl(req.body);
@@ -66,9 +65,15 @@ function verifySignature(body, headers) {
 }
 
 function isReadmeUpdated(body) {
+  // Checks Modifications to the README.md file in the Master Branch
   const readme = 'README.md';
+
+  // CHECK FOR MASTER BRANCH
+  console.log(body.ref);
+
+
   body.commits.forEach(commit => {
-    if (commit.added === readme || commit.modified === readme)
+    if (commit.modified === readme || commit.added === readme)
       return true;
   });
   return false;
