@@ -136,6 +136,7 @@ function verifyText(res) {
 }
 
 function verifyJson(res) {
+  console.log(res);
   if (
     res.ok &&
     res.headers.get('content-type') === 'application/json; charset=utf-8'
