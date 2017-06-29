@@ -26,7 +26,7 @@ app.post('/event', (req, res) => {
   // if (verifySignature(req.body, req.headers) && isReadmeUpdated(req.body)) {
   if (true) {
     const readmeURL = getReadmeUrl(req.body);
-    const contributorsURL = getContributorUrl(req.body);
+    const contributorsURL = getContributorsURL(req.body);
     let rawReadme;
 
     fetch(readmeURL)
@@ -45,13 +45,14 @@ app.post('/event', (req, res) => {
       })
       .then(verifyJson)
       .then(contributorsData => {
+        console.log(contributorsData);
         const contributors = buildContributorHtml(contributorsData);
         console.log(contributors);
-        const body = converter.makeHtml(rawReadme);
-        console.log(body);
-        const name = req.body.repository.name;
-        const page = buildPage(name, body, contributors);
-        console.log(page);
+        // const body = converter.makeHtml(rawReadme);
+        // console.log(body);
+        // const name = req.body.repository.name;
+        // const page = buildPage(name, body, contributors);
+        // console.log(page);
         // writeHtmlFile(page);
         // const encoded = base64EncodeString(page);
         // pushFileToRepo(encoded, name);
@@ -103,7 +104,7 @@ function getReadmeUrl(body) {
   return root + repo + file;
 }
 
-function getContributorUrl(body) {
+function getContributorsURL(body) {
   const repo = body.repository.name;
   return `https://api.github.com/repos/freecodecamp/${repo}/contributors`;
 }
