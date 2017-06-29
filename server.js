@@ -24,7 +24,7 @@ const app = express();
 app.use(bodyParser.json());
 
 app.post('/event', (req, res) => {
-  console.log(req.body.commits);
+  console.log(isReadmeUpdated(req.body));
   if (verifySignature(req.body, req.headers) && isReadmeUpdated(req.body)) {
     const url1 = getReadmeUrl(req.body);
     const url2 = getContributorUrl(req.body);
@@ -67,19 +67,10 @@ function verifySignature(body, headers) {
 
 function isReadmeUpdated(body) {
   const readme = 'README.md';
-  for (let i = 0; i < body.commits.length; i++) {
-    const commit = body.commits[i];
-    for (let j = 0; j < commit.added.length; j++) {
-      if (commit.added[i] === readme) {
-        return true;
-      }
-    }
-    for (let k = 0; k < commit.modified.length; k++) {
-      if (commit.modified[i] === readme) {
-        return true;
-      }
-    }
-  }
+  body.commits.forEach(commit => {
+    if (commit.added === readme || commit.modified === readme)
+      return true;
+  });
   return false;
 }
 

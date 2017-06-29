@@ -1,3 +1,4 @@
+ /* eslint-disable */
 /*
   EXAMPLE FILE of the GitHub Hook Messages being received
 */
