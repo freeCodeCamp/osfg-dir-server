@@ -13,7 +13,7 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const crypto = require('crypto');
-const assert = require('assert');
+// const assert = require('assert');
 const request = require('request');
 const fs = require('fs');
 const showdown = require('showdown');
@@ -22,14 +22,15 @@ const converter = new showdown.Converter();
 const app = express();
 
 app.use(bodyParser.json());
-app.use(express.static('public'));
 
 app.post('/event', (req, res) => {
+  console.log(req.headers);
+  console.log(req.body);
   if (verifySignature(req.body, req.headers) && isReadmeUpdated(req.body)) {
     const url1 = getReadmeUrl(req.body);
     const url2 = getContributorUrl(req.body);
-    fetchReadmeText(url1, (text) => {
-      getContributors(url2, (data) => {
+    fetchReadmeText(url1, text => {
+      getContributors(url2, data => {
         const contributors = buildContributorHtml(data);
         const body = converter.makeHtml(text);
         const name = req.body.repository.name;
@@ -37,16 +38,16 @@ app.post('/event', (req, res) => {
         writeHtmlFile(page);
         const encoded = base64EncodeString(page);
         pushFileToRepo(encoded, name);
-      })
+      });
     });
     console.log({ message: 'README.md created or updated' });
   } else {
-    console.log({ message: 'POST signature doesn\'t match key' });
+    console.log({ message: 'POST no README update in commit' });
   }
 });
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '/views/index.html'));
+  res.send('Nothing to see here');
 });
 
 const server = app.listen(process.env.PORT, () => {
@@ -55,7 +56,10 @@ const server = app.listen(process.env.PORT, () => {
 
 function verifySignature(body, headers) {
   const signature = headers['x-hub-signature'];
-  const hash = `sha1=${crypto.createHmac('sha1', process.env.WEBHOOK_KEY).update(body.toString()).digest('hex')}`;
+  const hash = `sha1=${crypto
+    .createHmac('sha1', process.env.WEBHOOK_KEY)
+    .update(body.toString())
+    .digest('hex')}`;
   // TODO: Test HMAC hash
   return 1 === 1;
 }
@@ -90,10 +94,16 @@ function fetchReadmeText(url, callback) {
     if (err) {
       console.log({ message: 'Failed to fetch README', error: err });
     }
-    if (res.statusCode === 200 && res.headers['content-type'] === 'text/plain; charset=utf-8') {
+    if (
+      res.statusCode === 200 &&
+      res.headers['content-type'] === 'text/plain; charset=utf-8'
+    ) {
       return callback(body);
     }
-    console.log({ message: 'Invalid response from GitHub request', status: res.statusCode });
+    console.log({
+      message: 'Invalid response from GitHub request',
+      status: res.statusCode,
+    });
     return callback(err);
   });
 }
@@ -111,10 +121,16 @@ function getContributors(url, callback) {
     },
   };
   request.get(options, (err, res, body) => {
-    if (res.statusCode === 200 && res.headers['content-type'] === 'application/json; charset=utf-8') {
+    if (
+      res.statusCode === 200 &&
+      res.headers['content-type'] === 'application/json; charset=utf-8'
+    ) {
       callback(body);
     } else {
-      console.log({ message: 'Invalid response from GitHub request', status: res.statusCode });
+      console.log({
+        message: 'Invalid response from GitHub request',
+        status: res.statusCode,
+      });
     }
   });
 }
@@ -127,9 +143,8 @@ function buildContributorHtml(data) {
     console.log({ message: 'JSON parse failed on contributors' });
   }
   let markup = '';
-  contributors.forEach((c) => {
-    markup +=
-    `
+  contributors.forEach(c => {
+    markup += `
     <div class="contributer">
       <a class="contributer-link" href=${c.url}>
         <img className="contributer-img" src=${c.avatar_url}/>
@@ -141,8 +156,7 @@ function buildContributorHtml(data) {
 }
 
 function buildPage(name, body, contributors) {
-  return (
-    `
+  return `
     <!DOCTYPE html>
     <html>
       <header>
@@ -164,13 +178,12 @@ function buildPage(name, body, contributors) {
         </div>
       </body>
     </html>
-    `
-  );
+    `;
 }
 
 function writeHtmlFile(html) {
-  const path = path.join(__dirname, '/views/index.html');
-  fs.writeFile(path, html, 'utf-8', (err) => {
+  const newPath = path.join(__dirname, '/views/index.html');
+  fs.writeFile(path, html, 'utf-8', err => {
     if (err) {
       console.log({ message: 'Error writing file', error: err });
     }
@@ -189,7 +202,10 @@ function getFileSha(url, callback) {
     },
   };
   request.get(options, (err, res, body) => {
-    if (res.statusCode === 200 && res.headers['content-type'] === 'application/json; charset=utf-8') {
+    if (
+      res.statusCode === 200 &&
+      res.headers['content-type'] === 'application/json; charset=utf-8'
+    ) {
       try {
         const data = JSON.parse(body);
         callback(data.sha);
@@ -204,7 +220,7 @@ function getFileSha(url, callback) {
 
 function pushFileToRepo(content, repo) {
   const url = `https://api.github.com/repos/freecodecamp/open-source-for-good-directory/contents/docs/${repo}/index.html`;
-  getFileSha(url, (sha) => {
+  getFileSha(url, sha => {
     const options = {
       url,
       headers: {
@@ -230,7 +246,10 @@ function pushFileToRepo(content, repo) {
       } else if (res.statusCode === 201) {
         console.log({ message: `${repo} index.html created` });
       } else {
-        console.log({ message: 'Invalid response from GitHub file creation', status: res.statusCode });
+        console.log({
+          message: 'Invalid response from GitHub file creation',
+          status: res.statusCode,
+        });
       }
     });
   });
