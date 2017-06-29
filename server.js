@@ -33,6 +33,7 @@ app.post('/event', (req, res) => {
     fetch(url1)
       .then(verifyText)
       .then(text => {
+        console.log(text);
         rawReadme = text;
         const options = {
           url2,
@@ -264,7 +265,7 @@ function pushFileToRepo(content, repo) {
 function verifyText(res) {
   if (
     res.statusCode === 200 &&
-    res.headers['content-type'] === 'text/plain; charset=utf-8'
+    res.headers['content-type'][0] === 'text/plain; charset=utf-8'
   ) {
     return res.body;
   }
@@ -277,7 +278,7 @@ function verifyText(res) {
 function verifyJson(res) {
   if (
     res.statusCode === 200 &&
-    res.headers['content-type'] === 'application/json; charset=utf-8'
+    res.headers['content-type'][0] === 'application/json; charset=utf-8'
   ) {
     return JSON.parse(res.body);
   }
