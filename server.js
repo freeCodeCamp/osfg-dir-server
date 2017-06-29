@@ -24,7 +24,7 @@ const app = express();
 app.use(bodyParser.json());
 
 app.post('/event', (req, res) => {
-  console.log(req.body.commits.modified);
+  console.log(req.body.commits);
   if (verifySignature(req.body, req.headers) && isReadmeUpdated(req.body)) {
     const url1 = getReadmeUrl(req.body);
     const url2 = getContributorUrl(req.body);
