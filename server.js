@@ -13,7 +13,7 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const crypto = require('crypto');
-const assert = require('assert');
+// const assert = require('assert');
 const request = require('request');
 const fs = require('fs');
 const showdown = require('showdown');
@@ -24,8 +24,7 @@ const app = express();
 app.use(bodyParser.json());
 
 app.post('/event', (req, res) => {
-  console.log(req.headers);
-  console.log(req.body);
+  console.log(req.body.commits.modified);
   if (verifySignature(req.body, req.headers) && isReadmeUpdated(req.body)) {
     const url1 = getReadmeUrl(req.body);
     const url2 = getContributorUrl(req.body);
@@ -60,8 +59,10 @@ function verifySignature(body, headers) {
     .createHmac('sha1', process.env.WEBHOOK_KEY)
     .update(body.toString())
     .digest('hex')}`;
-  // TODO: Test HMAC hash
-  return 1 === 1;
+  /*
+    SIGNATURE VERIFICATION TO BE COMPLETED (Test HMAC hash)
+  */
+  return true;
 }
 
 function isReadmeUpdated(body) {
