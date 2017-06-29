@@ -262,6 +262,11 @@ function base64EncodeString(string) {
 }*/
 
 function verifyText(res) {
+  console.log(res.ok);
+  console.log(res.status);
+  console.log(res.statusText);
+  console.log(res.headers.raw());
+  console.log(res.headers.get('content-type'));
   if (
     res.statusCode === 200 // && res.headers['content-type'][0] === 'text/plain; charset=utf-8'
   ) {
