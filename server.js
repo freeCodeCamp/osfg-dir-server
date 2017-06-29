@@ -13,7 +13,6 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const crypto = require('crypto');
-const request = require('request');
 const fetch = require('node-fetch');
 const fs = require('fs');
 const showdown = require('showdown');
