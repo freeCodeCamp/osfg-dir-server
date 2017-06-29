@@ -45,14 +45,11 @@ app.post('/event', (req, res) => {
       })
       .then(verifyJson)
       .then(contributorsData => {
-        console.log(contributorsData);
         const contributors = buildContributorHtml(contributorsData);
-        console.log(contributors);
-        // const body = converter.makeHtml(rawReadme);
-        // console.log(body);
-        // const name = req.body.repository.name;
-        // const page = buildPage(name, body, contributors);
-        // console.log(page);
+        const body = converter.makeHtml(rawReadme);
+        const name = req.body.repository.name;
+        const page = buildPage(name, body, contributors);
+        console.log(page);
         // writeHtmlFile(page);
         // const encoded = base64EncodeString(page);
         // pushFileToRepo(encoded, name);
@@ -113,12 +110,11 @@ function buildContributorHtml(contributors) {
   let html = '';
   contributors.forEach(c => {
     html += `
-    <div class="contributer">
-      <a class="contributer-link" href="${c.url}">
-        <img className="contributer-img" src="${c.avatar_url}"/>
+    <div class="contributor">
+      <a class="contributor-link" href="${c.url}">
+        <img className="contributor-img" src="${c.avatar_url}"/>
       </a>
-    </div>
-    `;
+    </div>`;
   });
   return html;
 }
