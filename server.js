@@ -222,9 +222,14 @@ function pushFileToRepo(webPage, repo) {
 
   // Getting the SHA Sum
   fetch(url, options)
-    .then(verifyJson)
-    .then(resp => {
-      const sha = resp;
+    .then(res => {
+      if( res.ok && res.headers.get('content-type') === 'application/json; charset=utf-8') {
+        return res.json().sha;
+      } else {
+        return '';
+      }
+    })
+    .then(sha => {
       const options = {
         headers: {
           'User-Agent': 'osfg-request',
