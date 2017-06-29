@@ -38,7 +38,7 @@ app.post('/event', (req, res) => {
            GitHub API https://developer.github.com/v3/#user-agent-required */
         const options = {
           headers: {
-            'User-Agent': 'open-source-for-good-directory',
+            'User-Agent': 'osfg-request',
           },
         };
         return fetch(contributorsURL, options);
