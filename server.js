@@ -224,7 +224,7 @@ function base64EncodeString(string) {
   });
 }*/
 
-function pushFileToRepo(content, repo) {
+/*function pushFileToRepo(content, repo) {
   const url = `https://api.github.com/repos/freecodecamp/open-source-for-good-directory/contents/docs/${repo}/index.html`;
   getFileSha(url, sha => {
     const options = {
@@ -259,7 +259,7 @@ function pushFileToRepo(content, repo) {
       }
     });
   });
-}
+}*/
 
 function verifyText(res) {
   if (
