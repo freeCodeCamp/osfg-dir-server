@@ -200,7 +200,7 @@ function base64EncodeString(string) {
   return new Buffer(string).toString('base64');
 }
 
-function getFileSha(url, callback) {
+/*function getFileSha(url, callback) {
   const options = {
     url,
     headers: {
@@ -222,7 +222,7 @@ function getFileSha(url, callback) {
       callback('');
     }
   });
-}
+}*/
 
 function pushFileToRepo(content, repo) {
   const url = `https://api.github.com/repos/freecodecamp/open-source-for-good-directory/contents/docs/${repo}/index.html`;
@@ -263,8 +263,7 @@ function pushFileToRepo(content, repo) {
 
 function verifyText(res) {
   if (
-    res.statusCode === 200 &&
-    res.headers['content-type'][0] === 'text/plain; charset=utf-8'
+    res.statusCode === 200 // && res.headers['content-type'][0] === 'text/plain; charset=utf-8'
   ) {
     return res.body;
   }
@@ -276,8 +275,7 @@ function verifyText(res) {
 
 function verifyJson(res) {
   if (
-    res.statusCode === 200 &&
-    res.headers['content-type'][0] === 'application/json; charset=utf-8'
+    res.statusCode === 200 // && res.headers['content-type'][0] === 'application/json; charset=utf-8'
   ) {
     return JSON.parse(res.body);
   }
