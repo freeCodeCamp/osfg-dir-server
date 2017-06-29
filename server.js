@@ -38,19 +38,22 @@ app.post('/event', (req, res) => {
            GitHub API https://developer.github.com/v3/#user-agent-required */
         const options = {
           headers: {
-            'User-Agent': 'osfg-request',
+            'User-Agent': 'open-source-for-good-directory',
           },
         };
         return fetch(contributorsURL, options);
       })
       .then(verifyJson)
       .then(contributorsData => {
+        /*
+          Building the HTML Web Page from the Fetched Data
+        */
         const contributors = buildContributorHtml(contributorsData);
         const body = converter.makeHtml(rawReadme);
         const name = req.body.repository.name;
         const page = buildPage(name, body, contributors);
-        console.log(page);
-        // writeHtmlFile(page);
+        
+        writeHtmlFile(page);
         // const encoded = base64EncodeString(page);
         // pushFileToRepo(encoded, name);
       })
@@ -147,11 +150,13 @@ function buildPage(name, body, contributors) {
 
 function writeHtmlFile(html) {
   const newPath = path.join(__dirname, '/views/index.html');
-  fs.writeFile(path, html, 'utf-8', err => {
-    if (err) {
-      console.log({ message: 'Error writing file', error: err });
-    }
-  });
+  try{
+    fs.writeFile(newPath, html, 'utf-8', err => {
+      if (err) throw err;
+    }) ;
+  } catch(err) {
+    console.log({ message: 'Error writing file', error: err });
+  }
 }
 
 function base64EncodeString(string) {
