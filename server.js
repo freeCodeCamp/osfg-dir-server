@@ -31,7 +31,7 @@ app.post('/event', (req, res) => {
     let rawReadme;
 
     fetch(readmeURL)
-      .then(verifyText)
+      .then(res => res.text())
       // Fetch Contributors
       .then(text => {
         rawReadme = text;
@@ -44,7 +44,7 @@ app.post('/event', (req, res) => {
         };
         return fetch(contributorsURL, options);
       })
-      .then(verifyJson)
+      .then(res => res.json())
       .then(contributorsData => {
         /*
           Building the HTML Web Page from the Fetched Data
@@ -120,32 +120,6 @@ function getContributorsURL(body) {
   return `https://api.github.com/repos/freecodecamp/${repo}/contributors`;
 }
 
-function verifyText(res) {
-  if (
-    res.ok &&
-    res.headers.get('content-type') === 'text/plain; charset=utf-8'
-  ) {
-    return res.text();
-  }
-  const err = new Error(
-    `Invalid Response from Github Request. Status Code: ${res.statusCode}`
-  );
-  throw err;
-}
-
-function verifyJson(res) {
-  if (
-    res.ok &&
-    res.headers.get('content-type') === 'application/json; charset=utf-8'
-  ) {
-    return res.json();
-  }
-  const err = new Error(
-    `Invalid Response from Github Request. Status Code: ${res.statusCode}`
-  );
-  throw err;
-}
-
 /*
   Building WebPage
 */
@@ -193,13 +167,9 @@ function buildPage(name, body, contributors) {
 */
 function writeHtmlFile(html) {
   const newPath = path.join(__dirname, '/views/index.html');
-  try {
-    fs.writeFile(newPath, html, 'utf-8', err => {
-      if (err) throw err;
-    });
-  } catch (err) {
-    console.log({ message: 'Error writing file', error: err });
-  }
+  fs.writeFile(newPath, html, 'utf-8', err => {
+    if (err) throw err;
+  });
 }
 
 function base64EncodeString(string) {
