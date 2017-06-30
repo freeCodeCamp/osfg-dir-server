@@ -23,6 +23,7 @@ const app = express();
 
 app.use(bodyParser.json());
 
+// Listenning for the Github WebHook
 app.post('/event', (req, res) => {
   if (verifySignature(req.body, req.headers) && isReadmeUpdated(req.body)) {
     const readmeURL = getReadmeUrl(req.body);
@@ -90,9 +91,7 @@ function isReadmeUpdated(body) {
   // Checks Modifications to the README.md file in the Master Branch
   const readme = 'README.md';
   let test = false;
-  // UNCOMMENT for Deployment
-  // const isMasterBranch = /master$/.test(body.ref);
-  const isMasterBranch = true;
+  const isMasterBranch = /master$/.test(body.ref);
   if (isMasterBranch) {
     body.commits.forEach(commit => {
       commit.added.forEach(file => {
@@ -211,10 +210,7 @@ function base64EncodeString(string) {
   Pushing to GitHub Repo
 */
 function pushFileToRepo(webPage, repo) {
-  // TESTING FILE UPDATE
-  const fileURL = `https://api.github.com/repos/freecodecamp/open-source-for-good-directory/contents/docs/${repo}/index.html?ref=dev-build-automation`;
-  // UCOMMENT FOR DEPLOYMENT
-  // const fileURL = `https://api.github.com/repos/freecodecamp/open-source-for-good-directory/contents/docs/${repo}/index.html`;
+  const fileURL = `https://api.github.com/repos/freecodecamp/open-source-for-good-directory/contents/docs/${repo}/index.html`;
   const options = {
     headers: {
       'User-Agent': 'osfg-request',
@@ -244,8 +240,7 @@ function pushFileToRepo(webPage, repo) {
             email: 'placeholder@test.com',
           },
           content: webPage,
-          // REPLACE TO 'master' FOR DEPLOYMENT
-          branch: 'dev-build-automation',
+          branch: 'master',
         }),
       };
       return fetch(fileURL, options);
