@@ -257,7 +257,8 @@ function pushFileToRepo(webPage, repo) {
       } else {
         log = {
           message: 'Invalid response from GitHub file creation',
-          status: res.status,
+          status: res.statusText,
+          code: res.status,
         };
       }
       console.log(log);
