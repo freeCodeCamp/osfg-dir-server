@@ -25,7 +25,7 @@ app.use(bodyParser.json());
 
 app.post('/event', (req, res) => {
   if (verifySignature(req.body, req.headers) && isReadmeUpdated(req.body)) {
-  // if (true) {
+    // if (true) {
     const readmeURL = getReadmeUrl(req.body);
     const contributorsURL = getContributorsURL(req.body);
     let rawReadme;
@@ -213,28 +213,20 @@ function base64EncodeString(string) {
   Pushing to GitHub Repo
 */
 function pushFileToRepo(webPage, repo) {
-  const url = `https://api.github.com/repos/freecodecamp/open-source-for-good-directory/contents/docs/${repo}/index.html`;
+  const fileURL = `https://api.github.com/repos/freecodecamp/open-source-for-good-directory/contents/docs/${repo}/index.html`;
   const options = {
     headers: {
       'User-Agent': 'osfg-request',
     },
   };
 
-  // Getting the SHA Sum
-  fetch(url, options)
+  /*
+    Request File to be Updated (Getting the SHA)
+  */
+  fetch(fileURL, options)
     .then(res => {
-      // File Exists
-      if (
-        res.ok &&
-        res.headers.get('content-type') === 'application/json; charset=utf-8'
-      ) {
-
-        return res.json().sha;
-      } else {
-        return '';
-      }
-    })
-    .then(sha => {
+      const sha = res.json().sha || '';
+      // Update or Create File
       const options = {
         headers: {
           'User-Agent': 'osfg-request',
@@ -242,7 +234,7 @@ function pushFileToRepo(webPage, repo) {
         },
         method: 'PUT',
         json: {
-          path: 'index.html',
+          path: `docs/${repo}/index.html`,
           sha,
           message: `Camper Bot updating README.md for ${repo}`,
           committer: {
@@ -250,10 +242,11 @@ function pushFileToRepo(webPage, repo) {
             email: 'placeholder@test.com',
           },
           content: webPage,
-          branch: 'master',
+          // REPLACE TO 'master' FOR DEPLOYMENT
+          branch: 'dev-build-automation', 
         },
       };
-      return fetch(url, options);
+      return fetch(fileURL, options);
     })
     .then(res => {
       let log = {};
