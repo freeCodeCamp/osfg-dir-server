@@ -27,6 +27,7 @@ app.post('/event', (req, res) => {
   // if (verifySignature(req.body, req.headers) && isReadmeUpdated(req.body)) {
   // if (true) {
   if (isReadmeUpdated(req.body)) {
+    console.log('Inside');
     const readmeURL = getReadmeUrl(req.body);
     const contributorsURL = getContributorsURL(req.body);
     let rawReadme;
