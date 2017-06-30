@@ -99,20 +99,21 @@ function verifySignature(body, headers) {
 function isReadmeUpdated(body) {
   // Checks Modifications to the README.md file in the Master Branch
   const readme = 'README.md';
+  let test = false;
   // UNCOMMENT for Deployment
   // const isMasterBranch = /master$/.test(body.ref);
   const isMasterBranch = true;
   if (isMasterBranch) {
     body.commits.forEach(commit => {
       commit.added.forEach(file => {
-        if (file === readme) return true;
+        if (file === readme) test = true;
       });
       commit.modified.forEach(file => {
-        if (file === readme) return true;
+        if (file === readme) test = true;
       });
     });
   }
-  return false;
+  return test;
 }
 
 /*
