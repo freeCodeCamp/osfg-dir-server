@@ -225,7 +225,6 @@ function pushFileToRepo(webPage, repo) {
   */
   fetch(fileURL, options)
     .then(res => {
-      console.log('GET File:', res);
       const sha = res.json().sha || '';
       // UPDATE or CREATE File
       const options = {
@@ -234,7 +233,7 @@ function pushFileToRepo(webPage, repo) {
           Authorization: `token ${process.env.GITHUB_TOKEN}`,
         },
         method: 'PUT',
-        json: {
+        body: JSON.parse({
           path: `docs/${repo}/index.html`,
           sha,
           message: `Camper Bot updating README.md for ${repo}`,
@@ -245,7 +244,7 @@ function pushFileToRepo(webPage, repo) {
           content: webPage,
           // REPLACE TO 'master' FOR DEPLOYMENT
           branch: 'dev-build-automation',
-        },
+        }),
       };
       return fetch(fileURL, options);
     })
@@ -259,7 +258,7 @@ function pushFileToRepo(webPage, repo) {
       } else {
         log = {
           message: 'Invalid response from GitHub file creation',
-          status: res.statusCode,
+          status: res.status,
         };
       }
       console.log(log);
