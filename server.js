@@ -24,8 +24,9 @@ const app = express();
 app.use(bodyParser.json());
 
 app.post('/event', (req, res) => {
-  if (verifySignature(req.body, req.headers) && isReadmeUpdated(req.body)) {
+  // if (verifySignature(req.body, req.headers) && isReadmeUpdated(req.body)) {
   // if (true) {
+  if (isReadmeUpdated(req.body)) {
     const readmeURL = getReadmeUrl(req.body);
     const contributorsURL = getContributorsURL(req.body);
     let rawReadme;
@@ -95,7 +96,6 @@ function verifySignature(body, headers) {
 }
 
 function isReadmeUpdated(body) {
-  console.log(body);
   // Checks Modifications to the README.md file in the Master Branch
   const readme = 'README.md';
   // UNCOMMENT for Deployment
