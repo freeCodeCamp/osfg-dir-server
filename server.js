@@ -249,7 +249,6 @@ function pushFileToRepo(webPage, repo) {
       return fetch(fileURL, options);
     })
     .then(res => {
-      console.log('C OR U:', res);
       let log = {};
       if (res.status === 200) {
         log.message = `${repo} index.html updated`;
