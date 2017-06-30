@@ -9,12 +9,13 @@
 * GitHub Pages.
 */
 
-const express = require('express');
+const fs = require('fs');
 const path = require('path');
+require('dotenv').config();
+const express = require('express');
 const bodyParser = require('body-parser');
 const crypto = require('crypto');
 const fetch = require('node-fetch');
-const fs = require('fs');
 const showdown = require('showdown');
 const converter = new showdown.Converter();
 
@@ -23,8 +24,8 @@ const app = express();
 app.use(bodyParser.json());
 
 app.post('/event', (req, res) => {
-  // if (verifySignature(req.body, req.headers) && isReadmeUpdated(req.body)) {
-  if (true) {
+  if (verifySignature(req.body, req.headers) && isReadmeUpdated(req.body)) {
+  // if (true) {
     const readmeURL = getReadmeUrl(req.body);
     const contributorsURL = getContributorsURL(req.body);
     let rawReadme;
@@ -136,7 +137,6 @@ function verifyText(res) {
 }
 
 function verifyJson(res) {
-  console.log(res);
   if (
     res.ok &&
     res.headers.get('content-type') === 'application/json; charset=utf-8'
@@ -223,7 +223,12 @@ function pushFileToRepo(webPage, repo) {
   // Getting the SHA Sum
   fetch(url, options)
     .then(res => {
-      if( res.ok && res.headers.get('content-type') === 'application/json; charset=utf-8') {
+      // File Exists
+      if (
+        res.ok &&
+        res.headers.get('content-type') === 'application/json; charset=utf-8'
+      ) {
+
         return res.json().sha;
       } else {
         return '';
@@ -253,7 +258,7 @@ function pushFileToRepo(webPage, repo) {
     .then(res => {
       let log = {};
       if (res.status === 200) {
-        log.message =`${repo} index.html updated`;
+        log.message = `${repo} index.html updated`;
       } else if (res.status === 201) {
         log.message = `${repo} index.html created`;
       } else {
