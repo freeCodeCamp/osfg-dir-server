@@ -24,8 +24,8 @@ const app = express();
 app.use(bodyParser.json());
 
 app.post('/event', (req, res) => {
-  if (verifySignature(req.body, req.headers) && isReadmeUpdated(req.body)) {
-    // if (true) {
+  // if (verifySignature(req.body, req.headers) && isReadmeUpdated(req.body)) {
+  if (true) {
     const readmeURL = getReadmeUrl(req.body);
     const contributorsURL = getContributorsURL(req.body);
     let rawReadme;
@@ -244,7 +244,7 @@ function pushFileToRepo(webPage, repo) {
           },
           content: webPage,
           // REPLACE TO 'master' FOR DEPLOYMENT
-          branch: 'dev-build-automation', 
+          branch: 'dev-build-automation',
         },
       };
       return fetch(fileURL, options);
