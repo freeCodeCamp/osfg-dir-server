@@ -95,6 +95,7 @@ function verifySignature(body, headers) {
 }
 
 function isReadmeUpdated(body) {
+  console.log(body);
   // Checks Modifications to the README.md file in the Master Branch
   const readme = 'README.md';
   // UNCOMMENT for Deployment
