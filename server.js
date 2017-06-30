@@ -14,7 +14,6 @@ const path = require('path');
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
-const crypto = require('crypto');
 const fetch = require('node-fetch');
 const showdown = require('showdown');
 const converter = new showdown.Converter();
@@ -25,59 +24,54 @@ const app = express();
 app.use(bodyParser.json());
 
 app.post('/event', (req, res) => {
-  const signature = req.headers['x-hub-signature'];
-  console.log(verifyGithubWebhook(signature, req.body, process.env.WEBHOOK_KEY));
-  // if (verifySignature(req.body, req.headers) && isReadmeUpdated(req.body)) {
-  // if (true) {
-  // if (isReadmeUpdated(req.body)) {
-  //   console.log('Inside');
-  //   const readmeURL = getReadmeUrl(req.body);
-  //   const contributorsURL = getContributorsURL(req.body);
-  //   let rawReadme;
+  if (verifySignature(req.body, req.headers) && isReadmeUpdated(req.body)) {
+    const readmeURL = getReadmeUrl(req.body);
+    const contributorsURL = getContributorsURL(req.body);
+    let rawReadme;
 
-  //   fetch(readmeURL)
-  //     .then(verifyText)
-  //     // Fetch Contributors
-  //     .then(text => {
-  //       rawReadme = text;
-  //       /* Header Inclusion necessary for the 
-  //          GitHub API https://developer.github.com/v3/#user-agent-required */
-  //       const options = {
-  //         headers: {
-  //           'User-Agent': 'open-source-for-good-directory',
-  //         },
-  //       };
-  //       return fetch(contributorsURL, options);
-  //     })
-  //     .then(verifyJson)
-  //     .then(contributorsData => {
-  //       /*
-  //         Building the HTML Web Page from the Fetched Data
-  //       */
-  //       const contributors = buildContributorHtml(contributorsData);
-  //       const body = converter.makeHtml(rawReadme);
-  //       const repoName = req.body.repository.name;
-  //       const page = buildPage(repoName, body, contributors);
+    fetch(readmeURL)
+      .then(verifyText)
+      // Fetch Contributors
+      .then(text => {
+        rawReadme = text;
+        /* Header Inclusion necessary for the 
+           GitHub API https://developer.github.com/v3/#user-agent-required */
+        const options = {
+          headers: {
+            'User-Agent': 'open-source-for-good-directory',
+          },
+        };
+        return fetch(contributorsURL, options);
+      })
+      .then(verifyJson)
+      .then(contributorsData => {
+        /*
+          Building the HTML Web Page from the Fetched Data
+        */
+        const contributors = buildContributorHtml(contributorsData);
+        const body = converter.makeHtml(rawReadme);
+        const repoName = req.body.repository.name;
+        const page = buildPage(repoName, body, contributors);
 
-  //       /*
-  //         Processing the File
-  //       */
-  //       writeHtmlFile(page);
-  //       const encodedPage = base64EncodeString(page);
+        /*
+          Processing the File
+        */
+        writeHtmlFile(page);
+        const encodedPage = base64EncodeString(page);
 
-  //       /* 
-  //         Pushing to GitHub Repo
-  //       */
-  //       pushFileToRepo(encodedPage, repoName);
-  //     })
-  //     .catch(err => {
-  //       console.log(err);
-  //     });
-  // }
+        /* 
+          Pushing to GitHub Repo
+        */
+        pushFileToRepo(encodedPage, repoName);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
 });
 
 app.get('/', (req, res) => {
-  res.send('Nothing to see here');
+  res.send('Automated Server for FreeCodeCamp Open Source For Good Directory');
 });
 
 const server = app.listen(process.env.PORT, () => {
@@ -89,14 +83,7 @@ const server = app.listen(process.env.PORT, () => {
 */
 function verifySignature(body, headers) {
   const signature = headers['x-hub-signature'];
-  const hash = `sha1=${crypto
-    .createHmac('sha1', process.env.WEBHOOK_KEY)
-    .update(body.toString())
-    .digest('hex')}`;
-  /*
-    SIGNATURE VERIFICATION TO BE COMPLETED (Test HMAC hash)
-  */
-  return true;
+  return verifyGithubWebhook(signature, JSON.stringify(body), process.env.WEBHOOK_KEY);
 }
 
 function isReadmeUpdated(body) {
