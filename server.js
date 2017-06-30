@@ -18,59 +18,62 @@ const crypto = require('crypto');
 const fetch = require('node-fetch');
 const showdown = require('showdown');
 const converter = new showdown.Converter();
+const verifyGithubWebhook = require('verify-github-webhook').default;
 
 const app = express();
 
 app.use(bodyParser.json());
 
 app.post('/event', (req, res) => {
+  const signature = req.headers['x-hub-signature'];
+  console.log(verifyGithubWebhook(signature, req.body, process.env.WEBHOOK_KEY));
   // if (verifySignature(req.body, req.headers) && isReadmeUpdated(req.body)) {
   // if (true) {
-  if (isReadmeUpdated(req.body)) {
-    console.log('Inside');
-    const readmeURL = getReadmeUrl(req.body);
-    const contributorsURL = getContributorsURL(req.body);
-    let rawReadme;
+  // if (isReadmeUpdated(req.body)) {
+  //   console.log('Inside');
+  //   const readmeURL = getReadmeUrl(req.body);
+  //   const contributorsURL = getContributorsURL(req.body);
+  //   let rawReadme;
 
-    fetch(readmeURL)
-      .then(verifyText)
-      // Fetch Contributors
-      .then(text => {
-        rawReadme = text;
-        /* Header Inclusion necessary for the 
-           GitHub API https://developer.github.com/v3/#user-agent-required */
-        const options = {
-          headers: {
-            'User-Agent': 'open-source-for-good-directory',
-          },
-        };
-        return fetch(contributorsURL, options);
-      })
-      .then(verifyJson)
-      .then(contributorsData => {
-        /*
-          Building the HTML Web Page from the Fetched Data
-        */
-        const contributors = buildContributorHtml(contributorsData);
-        const body = converter.makeHtml(rawReadme);
-        const repoName = req.body.repository.name;
-        const page = buildPage(repoName, body, contributors);
+  //   fetch(readmeURL)
+  //     .then(verifyText)
+  //     // Fetch Contributors
+  //     .then(text => {
+  //       rawReadme = text;
+  //       /* Header Inclusion necessary for the 
+  //          GitHub API https://developer.github.com/v3/#user-agent-required */
+  //       const options = {
+  //         headers: {
+  //           'User-Agent': 'open-source-for-good-directory',
+  //         },
+  //       };
+  //       return fetch(contributorsURL, options);
+  //     })
+  //     .then(verifyJson)
+  //     .then(contributorsData => {
+  //       /*
+  //         Building the HTML Web Page from the Fetched Data
+  //       */
+  //       const contributors = buildContributorHtml(contributorsData);
+  //       const body = converter.makeHtml(rawReadme);
+  //       const repoName = req.body.repository.name;
+  //       const page = buildPage(repoName, body, contributors);
 
-        /*
-          Processing the File
-        */
-        writeHtmlFile(page);
-        const encodedPage = base64EncodeString(page);
+  //       /*
+  //         Processing the File
+  //       */
+  //       writeHtmlFile(page);
+  //       const encodedPage = base64EncodeString(page);
 
-        /* 
-          Pushing to GitHub Repo
-        */
-        pushFileToRepo(encodedPage, repoName);
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  }
+  //       /* 
+  //         Pushing to GitHub Repo
+  //       */
+  //       pushFileToRepo(encodedPage, repoName);
+  //     })
+  //     .catch(err => {
+  //       console.log(err);
+  //     });
+  // }
 });
 
 app.get('/', (req, res) => {
@@ -221,9 +224,10 @@ function base64EncodeString(string) {
   Pushing to GitHub Repo
 */
 function pushFileToRepo(webPage, repo) {
-  // const fileURL = `https://api.github.com/repos/freecodecamp/open-source-for-good-directory/contents/docs/${repo}/index.html`;
   // TESTING FILE UPDATE
   const fileURL = `https://api.github.com/repos/freecodecamp/open-source-for-good-directory/contents/docs/${repo}/index.html?ref=dev-build-automation`;
+  // UCOMMENT FOR DEPLOYMENT
+  // const fileURL = `https://api.github.com/repos/freecodecamp/open-source-for-good-directory/contents/docs/${repo}/index.html`;
   const options = {
     headers: {
       'User-Agent': 'osfg-request',
