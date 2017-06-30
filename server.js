@@ -225,8 +225,9 @@ function pushFileToRepo(webPage, repo) {
   */
   fetch(fileURL, options)
     .then(res => {
+      console.log('GET File:', res);
       const sha = res.json().sha || '';
-      // Update or Create File
+      // UPDATE or CREATE File
       const options = {
         headers: {
           'User-Agent': 'osfg-request',
@@ -249,6 +250,7 @@ function pushFileToRepo(webPage, repo) {
       return fetch(fileURL, options);
     })
     .then(res => {
+      console.log('C OR U:', res);
       let log = {};
       if (res.status === 200) {
         log.message = `${repo} index.html updated`;
