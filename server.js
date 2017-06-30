@@ -129,7 +129,7 @@ function buildContributorHtml(contributors) {
     html += `
     <div class="contributor">
       <a class="contributor-link" href="${c.url}">
-        <img className="contributor-img" src="${c.avatar_url}"/>
+        <img class="contributor-img" src="${c.avatar_url}"/>
       </a>
     </div>`;
   });
