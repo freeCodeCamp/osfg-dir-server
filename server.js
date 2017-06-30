@@ -233,7 +233,7 @@ function pushFileToRepo(webPage, repo) {
           Authorization: `token ${process.env.GITHUB_TOKEN}`,
         },
         method: 'PUT',
-        body: JSON.parse({
+        body: JSON.stringify({
           path: `docs/${repo}/index.html`,
           sha,
           message: `Camper Bot updating README.md for ${repo}`,
