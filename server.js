@@ -221,7 +221,9 @@ function base64EncodeString(string) {
   Pushing to GitHub Repo
 */
 function pushFileToRepo(webPage, repo) {
-  const fileURL = `https://api.github.com/repos/freecodecamp/open-source-for-good-directory/contents/docs/${repo}/index.html`;
+  // const fileURL = `https://api.github.com/repos/freecodecamp/open-source-for-good-directory/contents/docs/${repo}/index.html`;
+  // TESTING FILE UPDATE
+  const fileURL = `https://api.github.com/repos/freecodecamp/open-source-for-good-directory/contents/docs/${repo}/index.html?ref=dev-build-automation`;
   const options = {
     headers: {
       'User-Agent': 'osfg-request',
