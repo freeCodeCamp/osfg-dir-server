@@ -232,8 +232,9 @@ function pushFileToRepo(webPage, repo) {
     Request File to be Updated (Getting the SHA)
   */
   fetch(fileURL, options)
-    .then(res => {
-      const sha = res.json().sha || '';
+    .then(res => res.json())
+    .then(data => {
+      const sha = data.sha || '';
       // UPDATE or CREATE File
       const options = {
         headers: {
