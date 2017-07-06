@@ -1,12 +1,6 @@
-/**
-* Note, the open-source-for-good-directory does not have a server back-end.
-* This is the reference code for a remote server that receives GitHub webhooks.
-* Here's how it's used: The server receives incoming push events for all
-* freeCodeCamp repos. The server captures the webhook POST request, determines
-* if there is an update to a README file, and if so, downloads the file from the
-* repo, transforms the file to an HTML template, remotely pushes the file to
-* open-source-for-good-directory repo which is then automatically deployed to
-* GitHub Pages.
+/*
+START SERVER WITH
+browser-sync start --server --files index.html style.css
 */
 
 const fs = require('fs');
@@ -14,6 +8,7 @@ const path = require('path');
 require('dotenv').config();
 const fetch = require('node-fetch');
 const showdown = require('showdown');
+const htmlAutoFormat = require('js-beautify').html;
 
 const converter = new showdown.Converter();
 
@@ -28,13 +23,12 @@ fetch(readmeURL)
   // Fetch Contributors
   .then(text => {
     rawReadme = text;
-    console.log(rawReadme);
     /* Header Inclusion necessary for the
         GitHub API https://developer.github.com/v3/#user-agent-required */
     const options = {
       headers: {
-        'User-Agent': 'open-source-for-good-directory'
-      }
+        'User-Agent': 'open-source-for-good-directory',
+      },
     };
     return fetch(contributorsURL, options);
   })
@@ -48,10 +42,12 @@ fetch(readmeURL)
     const repoName = 'freecodecamp/mail-for-good';
     const page = buildPage(repoName, body, contributors);
 
+    const formattedPage = htmlAutoFormat(page, { indent_size: 2 });
+
     /*
       Processing the File
     */
-    writeHtmlFile(page);
+    writeHtmlFile(formattedPage);
   })
   .catch(err => {
     console.log(err);
@@ -66,7 +62,7 @@ function buildContributorHtml(contributors) {
     html += `
     <div class="contributor">
       <a class="contributor-link" href="${c.html_url}">
-        <img className="contributor-img" src="${c.avatar_url}"/>
+        <img class="contributor-img" src="${c.avatar_url}"/>
       </a>
     </div>`;
   });

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <header>
-  <link rel="stylesheet" type="text/css" href="style.css">
+  <link rel="stylesheet" href="./style.css">
 </header>
 
 <body>
@@ -13,8 +13,7 @@
       <h1 class="repo-name">freecodecamp/mail-for-good</h1>
       <h1 id="mailforgood">Mail for Good</h1>
       <p><em>Please be aware that Mail for Good is currently in beta.</em></p>
-      <p>An app for sending millions of emails as cheaply as possible. Mail for Good uses AWS Simple Email Service to send bulk
-        emails at $0.10 per 1000 emails.</p>
+      <p>An app for sending millions of emails as cheaply as possible. Mail for Good uses AWS Simple Email Service to send bulk emails at $0.10 per 1000 emails.</p>
       <p>Mail for Good is fast and memory efficient, currently sending over 100 emails per second on a 1gb Digital Ocean VPS.</p>
       <p>We've used Mail for Good to deliver newsletters to hundreds of thousands of campers per week.</p>
       <p><a href="https://www.youtube.com/watch?v=_7U03GVD4a8"><strong>Click here to view our youtube video and get started.</strong></a></p>
@@ -25,51 +24,39 @@
         <li>Send email campaigns of unlimited size.</li>
         <li>Import emails saved in CSV format.</li>
         <li>Create templates to reuse for convenience when sending email campaigns.</li>
-        <li>Track bounce rate and other standard metrics. You can also insert tracking pixels and unsubcribe links a click of
-          a button.</li>
+        <li>Track bounce rate and other standard metrics. You can also insert tracking pixels and unsubcribe links a click of a button.</li>
         <li>Add custom fields to imported email lists such as names or cities.</li>
         <li>Grant other users (limited or otherwise) permissions to use your account on your behalf.</li>
-        <li>Add embedded HTML newsletter sign up forms to your site. These are snippets of code that will let your users sign
-          up with you at the click of a button.</li>
+        <li>Add embedded HTML newsletter sign up forms to your site. These are snippets of code that will let your users sign up with you at the click of a button.</li>
       </ul>
       <h3 id="performance">Performance</h3>
-      <p>We're currently sending weekly email blasts of over 700,000 emails in 3-4 hours on a $10 per month Digital Ocean VPS
-        with 1gb memory and 1 core processor.</p>
+      <p>We're currently sending weekly email blasts of over 700,000 emails in 3-4 hours on a $10 per month Digital Ocean VPS with 1gb memory and 1 core processor.</p>
       <p>Mail for Good is fast and scales to the rate limit enforced by AWS.</p>
       <h3 id="whyarewedoingthis">Why are we doing this?</h3>
-      <p>We want to help nonprofits manage their email campaigns as inexpensively as possible, and have full control over their
-        data.</p>
+      <p>We want to help nonprofits manage their email campaigns as inexpensively as possible, and have full control over their data.</p>
       <h3 id="howtoinstall">How to install</h3>
-      <p>Mail for good uses lots of different services (redis, Postgres and so on) that would make manual installation arduous.
-        To streamline this process, we use Docker.</p>
+      <p>Mail for good uses lots of different services (redis, Postgres and so on) that would make manual installation arduous. To streamline this process, we use Docker.</p>
       <h6 id="yourmachine">Your machine</h6>
-      <p>Mail for good is designed to be memory efficient, nonetheless the amount of memory needed will depend on how many emails
-        you are capable of sending per second (this limited is placed by Amazon). We <strong>strongly suggest you enable swap space</strong>        if your VPS does not enable this automatically (such as DigitalOcean).</p>
+      <p>Mail for good is designed to be memory efficient, nonetheless the amount of memory needed will depend on how many emails you are capable of sending per second (this limited is placed by Amazon). We <strong>strongly suggest you enable swap space</strong>        if your VPS does not enable this automatically (such as DigitalOcean).</p>
       <p>We suggest a machine with at least 2gb memory.</p>
       <h6 id="preinstallation">Preinstallation</h6>
-      <p>First, keep in mind that this application uses <a href="https://aws.amazon.com/ses/">Amazon SES</a>. Your account will
-        initially be <a href="http://docs.aws.amazon.com/ses/latest/DeveloperGuide/manage-sending-limits.html">limited by Amazon</a>.
+      <p>First, keep in mind that this application uses <a href="https://aws.amazon.com/ses/">Amazon SES</a>. Your account will initially be <a href="http://docs.aws.amazon.com/ses/latest/DeveloperGuide/manage-sending-limits.html">limited by Amazon</a>.
         To increase these limits, check out Amazon's documentation <a href="http://docs.aws.amazon.com/ses/latest/DeveloperGuide/increase-sending-limits.html">here</a>.</p>
-      <p>Before installing this application, you'll need some API keys from Google to handle authentication. This can be done
-        in a few steps:</p>
+      <p>Before installing this application, you'll need some API keys from Google to handle authentication. This can be done in a few steps:</p>
       <ol>
         <li>Login to <a href="https://console.developers.google.com/apis/">Google API Manager</a>.</li>
-        <li>In the left menu, select <strong>Dashboard</strong>. Now select <strong>Enable API</strong>, search for <code>Google+</code>          and select it. At the top of the screen, ensure it's enabled by clicking on <strong>Enable</strong>.</li>
+        <li>In the left menu, select <strong>Dashboard</strong>. Now select <strong>Enable API</strong>, search for <code>Google+</code> and select it. At the top of the screen, ensure it's enabled by clicking on <strong>Enable</strong>.</li>
         <li>In the left menu, select <strong>Credentials</strong>. Then click <strong>Create Credentials</strong> &gt; <strong>OAuth client ID</strong>.</li>
-        <li>Select <strong>Web Application</strong>. Name is as you wish, but under <strong>Authorised Javascript Origins</strong>          put <code>http://localhost:8080</code>, and under <strong>Authorised redirect URIs</strong> put <code>http://localhost:8080/auth/google/callback</code>.</li>
-        <li>Click <strong>Create</strong>. You will now have a Client ID and Client Secret. In your .env file, put the Client
-          ID as your GOOGLE<em>CONSUMER</em>KEY, and the Client Secret as your GOOGLE<em>CONSUMER</em>SECRET.</li>
+        <li>Select <strong>Web Application</strong>. Name is as you wish, but under <strong>Authorised Javascript Origins</strong> put <code>http://localhost:8080</code>, and under <strong>Authorised redirect URIs</strong> put <code>http://localhost:8080/auth/google/callback</code>.</li>
+        <li>Click <strong>Create</strong>. You will now have a Client ID and Client Secret. In your .env file, put the Client ID as your GOOGLE<em>CONSUMER</em>KEY, and the Client Secret as your GOOGLE<em>CONSUMER</em>SECRET.</li>
       </ol>
       <h6 id="installingwithdocker">Installing with Docker</h6>
-      <p>The first step is to download Docker itself. The process for this differs depending your OS. You can find a guide here
-        https://docs.docker.com/engine/installation/.</p>
+      <p>The first step is to download Docker itself. The process for this differs depending your OS. You can find a guide here https://docs.docker.com/engine/installation/.</p>
       <p>Now, clone the repository and change into it.</p>
       <p>Edit the <code>.env.example</code> file in your root directory.</p>
-      <p>After this, you'll need to create your own .env file. Check out the .env.example file in this repo. From the terminal,
-        you can run <code>cp .env.example .env</code> then edit the .env file with any editor of your choice. There are instruction
-        in this file that you can follow.</p>
-      <p>Now run <code>docker-compose up</code>. This will run all the containers needed to launch this app, and will take some
-        time to finish.</p>
+      <p>After this, you'll need to create your own .env file. Check out the .env.example file in this repo. From the terminal, you can run <code>cp .env.example .env</code> then edit the .env file with any editor of your choice. There are instruction in
+        this file that you can follow.</p>
+      <p>Now run <code>docker-compose up</code>. This will run all the containers needed to launch this app, and will take some time to finish.</p>
       <p>When the process is finished, the app will be exposed on port 8080 and accessible by visiting <code>http://[hostname]</code>.</p>
       <h6 id="installationsummary">Installation summary</h6>
       <ol>
@@ -80,12 +67,11 @@
         <li>Visit <code>http://[hostname]</code> or <code>localhost</code> if running locally.</li>
       </ol>
       <h3 id="troubleshooting">Troubleshooting</h3>
-      <p>We're keen to tackle any issues people encounter. If you experience any problems, please create an issue and we'll
-        get back to you.</p>
-      <p>If at any point you changed a file after running <code>docker-compose</code>, run <code>docker-compose up --force-recreate</code>        to ensure they're included.</p>
+      <p>We're keen to tackle any issues people encounter. If you experience any problems, please create an issue and we'll get back to you.</p>
+      <p>If at any point you changed a file after running <code>docker-compose</code>, run <code>docker-compose up --force-recreate</code> to ensure they're included.</p>
       <h3 id="howtocontribute">How to contribute</h3>
       <p>Found a bug? Please let us know by <a href="https://github.com/freeCodeCamp/Mail-for-Good/issues/new">creating an issue</a>.</p>
-      <p>We warmly welcome contributions from anyone. Check out our <a href="https://github.com/FreeCodeCamp/nonprofit-email-service/blob/master/CONTRIBUTING.md">how to contribute</a>        section to find out how you can do so.</p>
+      <p>We warmly welcome contributions from anyone. Check out our <a href="https://github.com/FreeCodeCamp/nonprofit-email-service/blob/master/CONTRIBUTING.md">how to contribute</a> section to find out how you can do so.</p>
       <h3 id="license">License</h3>
       <p>Copyright (c) 2017, freeCodeCamp.</p>
       <p>This computer software is licensed under the <a href="https://github.com/freeCodeCamp/Mail-for-Good/blob/master/LICENSE.md">BSD-3-Clause</a>.</p>
@@ -94,77 +80,77 @@
 
         <div class="contributor">
           <a class="contributor-link" href="https://github.com/AndrewGHC">
-        <img className="contributor-img" src="https://avatars3.githubusercontent.com/u/15863952?v=3"/>
+        <img class="contributor-img" src="https://avatars3.githubusercontent.com/u/15863952?v=3"/>
       </a>
         </div>
         <div class="contributor">
           <a class="contributor-link" href="https://github.com/4iar">
-        <img className="contributor-img" src="https://avatars1.githubusercontent.com/u/8053216?v=3"/>
+        <img class="contributor-img" src="https://avatars1.githubusercontent.com/u/8053216?v=3"/>
       </a>
         </div>
         <div class="contributor">
           <a class="contributor-link" href="https://github.com/CodeNonprofit">
-        <img className="contributor-img" src="https://avatars1.githubusercontent.com/u/9578097?v=3"/>
+        <img class="contributor-img" src="https://avatars1.githubusercontent.com/u/9578097?v=3"/>
       </a>
         </div>
         <div class="contributor">
           <a class="contributor-link" href="https://github.com/invalid-email-address">
-        <img className="contributor-img" src="https://avatars3.githubusercontent.com/u/148100?v=3"/>
+        <img class="contributor-img" src="https://avatars3.githubusercontent.com/u/148100?v=3"/>
       </a>
         </div>
         <div class="contributor">
           <a class="contributor-link" href="https://github.com/joel-bentley">
-        <img className="contributor-img" src="https://avatars3.githubusercontent.com/u/10087880?v=3"/>
+        <img class="contributor-img" src="https://avatars3.githubusercontent.com/u/10087880?v=3"/>
       </a>
         </div>
         <div class="contributor">
           <a class="contributor-link" href="https://github.com/karuppiah7890">
-        <img className="contributor-img" src="https://avatars0.githubusercontent.com/u/12808424?v=3"/>
+        <img class="contributor-img" src="https://avatars0.githubusercontent.com/u/12808424?v=3"/>
       </a>
         </div>
         <div class="contributor">
           <a class="contributor-link" href="https://github.com/CarlJKashnier">
-        <img className="contributor-img" src="https://avatars3.githubusercontent.com/u/13282866?v=3"/>
+        <img class="contributor-img" src="https://avatars3.githubusercontent.com/u/13282866?v=3"/>
       </a>
         </div>
         <div class="contributor">
           <a class="contributor-link" href="https://github.com/jmcilhargey">
-        <img className="contributor-img" src="https://avatars3.githubusercontent.com/u/13109897?v=3"/>
+        <img class="contributor-img" src="https://avatars3.githubusercontent.com/u/13109897?v=3"/>
       </a>
         </div>
         <div class="contributor">
           <a class="contributor-link" href="https://github.com/QuincyLarson">
-        <img className="contributor-img" src="https://avatars2.githubusercontent.com/u/985197?v=3"/>
+        <img class="contributor-img" src="https://avatars2.githubusercontent.com/u/985197?v=3"/>
       </a>
         </div>
         <div class="contributor">
           <a class="contributor-link" href="https://github.com/adam-lynch">
-        <img className="contributor-img" src="https://avatars2.githubusercontent.com/u/1427241?v=3"/>
+        <img class="contributor-img" src="https://avatars2.githubusercontent.com/u/1427241?v=3"/>
       </a>
         </div>
         <div class="contributor">
           <a class="contributor-link" href="https://github.com/danbovey">
-        <img className="contributor-img" src="https://avatars3.githubusercontent.com/u/1503076?v=3"/>
+        <img class="contributor-img" src="https://avatars3.githubusercontent.com/u/1503076?v=3"/>
       </a>
         </div>
         <div class="contributor">
           <a class="contributor-link" href="https://github.com/sanspace">
-        <img className="contributor-img" src="https://avatars1.githubusercontent.com/u/347714?v=3"/>
+        <img class="contributor-img" src="https://avatars1.githubusercontent.com/u/347714?v=3"/>
       </a>
         </div>
         <div class="contributor">
           <a class="contributor-link" href="https://github.com/zhakkarn">
-        <img className="contributor-img" src="https://avatars1.githubusercontent.com/u/6611316?v=3"/>
+        <img class="contributor-img" src="https://avatars1.githubusercontent.com/u/6611316?v=3"/>
       </a>
         </div>
         <div class="contributor">
           <a class="contributor-link" href="https://github.com/anuragasaurus">
-        <img className="contributor-img" src="https://avatars3.githubusercontent.com/u/12389467?v=3"/>
+        <img class="contributor-img" src="https://avatars3.githubusercontent.com/u/12389467?v=3"/>
       </a>
         </div>
         <div class="contributor">
           <a class="contributor-link" href="https://github.com/raisedadead">
-        <img className="contributor-img" src="https://avatars3.githubusercontent.com/u/1884376?v=3"/>
+        <img class="contributor-img" src="https://avatars3.githubusercontent.com/u/1884376?v=3"/>
       </a>
         </div>
       </div>
