@@ -31,13 +31,16 @@ const configFile = '.osfg-dir-config.json';
 // Listenning for the Github WebHook
 app.post('/event', (req, res) => {
   if (verifySignature(req.body, req.headers) && wasConfigUpdated(req.body, configFile)) {
+    console.log("Inside");
     let repoConfig;
     const fileURL = getFileUrl(req.body, configFile);
 
     fetch(fileURL)
       .then(res => res.json())
       // Fetch Contributors
-      .then(repoConfig => {
+      .then(repoConfigFile => {
+        console.log(repoConfigFile);
+        repoConfig = repoConfigFile;
         repoConfig.url = getRepoURL(req.body);
 
         const contributorsURL = getContributorsURL(req.body);
