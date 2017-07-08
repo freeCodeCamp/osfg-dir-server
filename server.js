@@ -26,11 +26,12 @@ const app = express();
 
 app.use(bodyParser.json());
 
+const configFile = '.osfg-dir-config.js';
+
 // Listenning for the Github WebHook
 app.post('/event', (req, res) => {
-  if (verifySignature(req.body, req.headers) && wasConfigUpdated(req.body)) {
+  if (verifySignature(req.body, req.headers) && wasConfigUpdated(req.body, configFile)) {
     let repoConfig;
-    const configFile = '.osfg-dir-config.js';
     const fileURL = getFileUrl(req.body, configFile);
 
     fetch(fileURL)
