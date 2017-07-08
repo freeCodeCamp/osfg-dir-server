@@ -26,7 +26,7 @@ const app = express();
 
 app.use(bodyParser.json());
 
-const configFile = '.osfg-dir-config.js';
+const configFile = '.osfg-dir-config.json';
 
 // Listenning for the Github WebHook
 app.post('/event', (req, res) => {
@@ -35,13 +35,9 @@ app.post('/event', (req, res) => {
     const fileURL = getFileUrl(req.body, configFile);
 
     fetch(fileURL)
-      .then(res => res.text())
+      .then(res => res.json())
       // Fetch Contributors
-      .then(text => {
-        /*
-          PART TO TEST
-        */
-        repoConfig = eval(text);
+      .then(repoConfig => {
         repoConfig.url = getRepoURL(req.body);
 
         const contributorsURL = getContributorsURL(req.body);
