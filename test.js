@@ -12,8 +12,6 @@ const readmeURL =
   'https://raw.githubusercontent.com/freecodecamp/mail-for-good/master/README.md';
 const contributorsURL =
   'https://api.github.com/repos/freeCodeCamp/mail-for-good/contributors';
-const repoFullName = 'freecodecamp/mail-for-good';
-let rawReadme;
 
 const repoConfig = require('./.osfg-dir-config');
 
@@ -21,9 +19,6 @@ fetch(readmeURL)
   .then(res => res.text())
   // Fetch Contributors
   .then(text => {
-    // rawReadme = text;
-    rawReadme = require('./NONPROFIT');
-
     /* Header Inclusion necessary for the
         GitHub API https://developer.github.com/v3/#user-agent-required */
     const options = {
@@ -69,7 +64,6 @@ function buildContributorsHtml(contribData) {
 
 function buildPage(repoConfig, repoLink, contributors) {
   const { title, description, demoVideo, liveDemo, body } = repoConfig;
-  const screenshot = null;
   return `
     <!DOCTYPE html>
     <html>
@@ -97,15 +91,14 @@ function buildPage(repoConfig, repoLink, contributors) {
                   </div>
                 </div>`
               : ''}
-            ${screenshot ? 
-              `<img src="${screenshot}"`
-              : ''}
             <div class="buttons-container">
-              <a href="${liveDemo}" target="_blank">
+              ${liveDemo
+                ? `<a href="${liveDemo}" target="_blank">
                 <button>
                   Live Demo 
                   <i class="fa fa-cube" aria-hidden="true"></i>
-                </button></a>
+                </button></a>`
+                : ''}
               <a href="${repoLink}" target="_blank">
                 <button>
                   Code Repo

@@ -5,9 +5,6 @@
 */
 module.exports = {
   title: 'Mail for Good',
-  status: 'prod',
-  screenshot:
-    'https://github.com/freeCodeCamp/Mail-for-Good/blob/master/docs/resources/hero.png',
   demoVideo: 'https://www.youtube.com/watch?v=_7U03GVD4a8',
   liveDemo: 'https://meeting.freecodecamp.com/',
   description: `An app for sending millions of emails as cheaply as possible. Mail for Good uses AWS Simple Email Service to send bulk emails at $0.10 per 1000 emails.
