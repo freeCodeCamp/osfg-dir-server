@@ -3,7 +3,7 @@
 
   body: a 
 */
-module.exports = {
+{
   title: 'Mail for Good',
   demoVideo: 'https://www.youtube.com/watch?v=_7U03GVD4a8',
   liveDemo: 'https://meeting.freecodecamp.com/',
