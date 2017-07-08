@@ -34,7 +34,6 @@ app.post('/event', (req, res) => {
     verifySignature(req.body, req.headers) &&
     wasConfigUpdated(req.body, configFile)
   ) {
-    console.log('Inside');
     let repoConfig;
     const fileURL = getFileUrl(req.body, configFile);
 
@@ -42,9 +41,9 @@ app.post('/event', (req, res) => {
       .then(res => res.json())
       // Fetch Contributors
       .then(repoConfigFile => {
-        console.log(repoConfigFile);
         repoConfig = repoConfigFile;
         repoConfig.url = getRepoURL(req.body);
+        repoConfig.description = JSON.parse(repoConfig.description);
 
         const contributorsURL = getContributorsURL(req.body);
         /* Header Inclusion mandatory for the 
