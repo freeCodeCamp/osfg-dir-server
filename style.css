@@ -3,43 +3,51 @@
 }
 
 body {
+  font-family: 'Lato', sans-serif;
+  font-size: 1.1em;
+  font-weight: 300;
+
   margin: 0;
   padding: 0;
-  color: #212121;
-  font-family: 'Lato', sans-serif;
-  font-weight: 300;
-  letter-spacing: 0.03em;
-  background-color: #e0e0e0;
 
+  letter-spacing: 0.03em;
+
+  color: #212121;
+  background-color: #e0e0e0;
 }
 
 .wrapper {
-  border-style: solid;
-  border-width: 1em 0 0 0;
-  border-color: #006400;
   display: flex;
-  justify-content: center;
-  align-items: center;
   flex-direction: column;
+
+  border-width: 1em 0 0 0;
+  border-style: solid;
+  border-color: #006400;
+
+  align-items: center;
+  justify-content: center;
 }
 
 .fcc-banner {
-  margin: 1em auto;
   display: flex;
+
+  margin: 1em auto;
 }
 
 .fcc-banner > img {
-  margin: auto;
   display: block;
+
   width: 20em;
+  margin: auto;
 }
 
 .content-container {
-  border-radius: 8px;
-  margin: 0 auto 4em;
-  background-color: #ffffff;
   width: 48em;
+  margin: 0 auto 4em;
+
   border: 1px solid #adadad;
+  border-radius: 8px;
+  background-color: #fff;
 }
 
 .content-container > * {
@@ -47,35 +55,43 @@ body {
 }
 
 .repo-name {
-  border-radius: 8px 8px 0 0;
-  font-weight: inherit;
-  background-color: #006400;
-  color: #ffffff;
+  font-weight: 400;
+
   margin: 0;
-  text-align: center;
   padding: 0.75em;
-  border-style: solid;
+
+  text-align: center;
+
+  color: #fff;
   border-width: 1px;
+  border-style: solid;
   border-color: #006400;
+  border-radius: 8px 8px 0 0;
+  background-color: #006400;
 }
 
 .content-container h1 {
-  text-align: center;
   margin: 0;
   padding: 0.5em 0;
+
+  text-align: center;
+
   border-bottom: 1px solid #e0e0e0;
 }
 
 .content-container h2 {
-  text-align: center;
   margin: 0;
   padding: 0.5em 0;
+
+  text-align: center;
+
   border-bottom: 1px solid #e0e0e0;
 }
 
 .content-container h3 {
   margin: 0;
   padding: 1em 0;
+
   text-align: center;
 }
 
@@ -85,6 +101,7 @@ body {
 
 .content-container img {
   max-width: 100%;
+
   border-radius: 4px;
 }
 
@@ -93,36 +110,125 @@ body {
 }
 
 .content-container code {
-  background-color: #fafafa;
   padding: 0.5em 1em;
+
   border-radius: 3px;
+  background-color: #fafafa;
+}
+
+.project-description {
+  font-size: 1.1em;
+
+  padding-top: 30px;
+}
+
+.project-video {
+  max-width: 100%;
+  padding: 40px 100px;
+  padding-bottom: 100px;
+
+  text-align: center;
+}
+
+.video-container {
+  position: relative;overflow: hidden;height: 0;
+  padding-top: 30px;
+  padding-bottom: 56.25%;
+}
+
+.video-container iframe,
+.video-container object,
+.video-container embed {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+}
+
+.buttons-container {
+  display: flex;
+
+  height: 50px;
+  margin-bottom: 2em;
+
+  align-items: center;
+  justify-content: center;
+}
+/*
+.buttons-container > a > button {
+  font-family: inherit;
+  font-size: 1em;
+
+  padding: 10px;
+
+  color: white;
+  border-width: 0;
+  background-color: #ff6d58;
+}*/
+
+button {
+  font-size: 1.2em;
+  font-weight: normal;
+  font-weight: 400;
+  line-height: 1.42857143;
+
+  padding: 6px 12px;
+
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.2s ease-in-out, border 0.2s ease-in-out;
+  text-align: center;
+  vertical-align: middle;
+
+  color: #292f33;
+  border: 1px solid #f1a02a;
+  border-radius: 4px;
+  outline: 0;
+  background-color: #ffac33;
+  background-image: linear-gradient(#ffcc4d, #ffac33);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+button:hover {
+  border-color: #ec8b11;
+  background-color: #e99110;
+  background-image: linear-gradient(#ffcc4d, #e99110);
+}
+
+
+
+.body-container {
+  margin-bottom: 50px;
 }
 
 .contributors {
   display: flex;
-  display: -webkit-flex;
-  display: -ms-flexbox;
+
+  padding: 1em 3em;
+
   flex-wrap: wrap;
-  -webkit-flex-wrap: wrap;
-  -ms-flex-wrap: wrap;
   justify-content: center;
-  padding: 2em;
 }
 
 .contributor img {
-  width: 5em;
-  height: 5em;
-  border-radius: 50%;
   position: relative;
   z-index: 10;
+
+  width: 3.5em;
+  height: 3.5em;
+  margin: 3px;
+
+  border-radius: 50%;
 }
 
 @media screen and (max-width: 54em) {
   .content-container,
   .contributors,
   .fcc-banner {
-    padding: 0 2em;
     width: 40em;
+    padding: 0 2em;
   }
   .contributors {
     padding: 2em;
