@@ -1,12 +1,12 @@
 /**
-* Note, the open-source-for-good-directory does not have a server back-end.
-* This is the reference code for a remote server that receives GitHub webhooks.
-* Here's how it's used: The server receives incoming push events for all
-* freeCodeCamp repos. The server captures the webhook POST request, determines
-* if there is an update to a README file, and if so, downloads the file from the
-* repo, transforms the file to an HTML template, remotely pushes the file to
-* open-source-for-good-directory repo which is then automatically deployed to
-* GitHub Pages.
+* NOTICE: the open-source-for-good-directory does not have a server Back-end.
+* This is the reference code for a remote server that receives GitHub WebHooks.
+* WORKING MODEL: The WebHook registers push events for all freeCodeCamp repos. 
+* Then, it sends a POST request (URL/event) to a server hosted in Glitch.com
+* If there is an update to the configuration file '.osfg-dir-config.js', it 
+* downloads the file and builds an HTML file that is pushed to the
+* open-source-for-good-directory repo inside the 'docs' folder.
+* Everything inside this folder is automatically deployed to GitHub Pages.
 */
 
 const fs = require('fs');
