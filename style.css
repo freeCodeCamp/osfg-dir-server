@@ -30,15 +30,15 @@ body {
 
 .fcc-banner {
   display: flex;
-
-  margin: 1em auto;
+  justify-content: center;
+  align-items: center;
+  padding: 2em 0;
 }
 
 .fcc-banner > img {
   display: block;
-
-  width: 20em;
-  margin: auto;
+  min-width: 310px;
+  width: 30vw;
 }
 
 .content-container {
@@ -125,8 +125,7 @@ body {
 
 .project-video {
   max-width: 100%;
-  padding: 30px 100px;
-  padding-bottom: 40px;
+  margin: 40px 0;
 
   text-align: center;
 }
@@ -134,6 +133,7 @@ body {
 .video-container {
   position: relative;overflow: hidden;height: 0;
   padding-bottom: 56.25%;
+
   border: 1px solid black;
 }
 
@@ -150,40 +150,22 @@ body {
 
 .buttons-container {
   display: flex;
-  width: 100%;
+  flex-wrap: wrap;
 
-  height: 50px;
-  margin: 50px 0;
+  padding: 40px 0;
 
   align-items: center;
   justify-content: center;
 }
-/*
-button {
-  font-family: inherit;
-  font-size: 1em;
-
-  padding: 12px 20px;
-  margin: 0 20px;
-  outline: none;
-  cursor: pointer;
-  border-radius: 4px;
-
-  color: white;
-  border-width: 0;
-  background-color: #ff6d58;
-}*/
-
 
 button {
   font-size: 1.3em;
-  font-weight: normal;
   font-weight: 400;
   line-height: 1.42857143;
 
+  min-width: 190px;
+  margin: 10px 10px;
   padding: 12px 20px;
-  
-  margin: 0 10px;
 
   cursor: pointer;
   user-select: none;
@@ -207,7 +189,7 @@ button:hover {
 }
 
 .body-container {
-  margin: 70px 0;
+  padding: 40px 3em;
 }
 
 .contributors {
@@ -230,14 +212,38 @@ button:hover {
   border-radius: 50%;
 }
 
-@media screen and (max-width: 54em) {
+@media (max-width: 860px) {
   .content-container,
   .contributors,
-  .fcc-banner {
-    width: 40em;
-    padding: 0 2em;
+  .contributors {
+    width: 90vw;
+  }
+}
+
+@media (max-width: 720px) {
+  .content-container,
+  .contributors{
+    width: 30em;
+    padding: 0;
   }
   .contributors {
     padding: 2em;
+  }
+}
+
+
+@media (max-width: 550px) {
+  .content-container,
+  .contributors {
+    width: 95vw;
+    padding: 0;
+    margin: 0;
+  }
+  .contributors {
+    padding: 1em;
+  }
+  .project-description,
+  .body-container {
+    padding: 1em;
   }
 }
