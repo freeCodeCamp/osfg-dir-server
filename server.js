@@ -38,13 +38,12 @@ app.post('/event', (req, res) => {
     const fileURL = getFileUrl(req.body, configFile);
 
     fetch(fileURL)
-      .then(res => res.json())
+      .then(res => res.text())
       // Fetch Contributors
       .then(repoConfigFile => {
-        repoConfig = repoConfigFile;
+        repoConfig = eval(repoConfigFile);
         repoConfig.url = getRepoURL(req.body);
-        repoConfig.description = JSON.parse(repoConfig.description);
-
+ 
         const contributorsURL = getContributorsURL(req.body);
         /* Header Inclusion mandatory for the 
            GitHub API https://developer.github.com/v3/#user-agent-required */
