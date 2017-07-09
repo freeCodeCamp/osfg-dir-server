@@ -26,7 +26,7 @@ const app = express();
 
 app.use(bodyParser.json());
 
-const configFile = '.osfg-dir-config.json';
+const configFile = '.osfg-dir-config.js';
 
 // Listenning for the Github WebHook
 app.post('/event', (req, res) => {
