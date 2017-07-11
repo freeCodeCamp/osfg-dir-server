@@ -73,7 +73,7 @@ app.post('/event', (req, res) => {
         /* 
           Pushing to GitHub Repo
         */
-        pushFileToRepo(encodedPage, repoName);
+        pushFileToRepo(encodedPage, repoName.toLowerCase());
       })
       .catch(err => {
         console.log(err);
