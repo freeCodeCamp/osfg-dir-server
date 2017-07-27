@@ -1,7 +1,7 @@
 {
-  "name": "fcc-directory-server",
-  "version": "0.1.0",
-  "description": "FreeCodeCamp Directory Server",
+  "name": "osfg-dir-server",
+  "version": "1.0.0",
+  "description": "Open Source for Good Directory Server for freeCodeCamp",
   "main": "server.js",
   "dependencies": {
     "body-parser": "^1.17.2",
@@ -20,16 +20,16 @@
     "start": "node server.js"
   },
   "engines": {
-    "node": "8.1.4"
+    "node": "8.2.1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/juandaco/fcc-directory-server.git"
+    "url": "git+https://github.com/juandaco/osfg-dir-server"
   },
   "author": "Juan D. Acosta",
-  "license": "ISC",
+  "license": "BSD 3",
   "bugs": {
-    "url": "https://github.com/juandaco/fcc-directory-server/issues"
+    "url": "https://github.com/juandaco/osfg-dir-server/issues"
   },
-  "homepage": "https://github.com/juandaco/fcc-directory-server#readme"
+  "homepage": "https://github.com/juandaco/osfg-dir-server#readme"
 }

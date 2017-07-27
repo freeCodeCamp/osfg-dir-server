@@ -9,8 +9,6 @@
 * Everything inside this folder is automatically deployed to GitHub Pages.
 */
 
-const fs = require('fs');
-const path = require('path');
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -26,6 +24,7 @@ const app = express();
 
 app.use(bodyParser.json());
 
+// Config file name to be searched inside repos
 const configFile = '.osfg-dir-config.js';
 
 // Listenning for the Github WebHook
@@ -67,7 +66,6 @@ app.post('/event', (req, res) => {
         /*
           Processing the File
         */
-        writeHtmlFile(formattedPage);
         const encodedPage = base64EncodeString(formattedPage);
 
         /* 
@@ -161,6 +159,7 @@ function buildPage(repoConfig, contributors) {
       <header>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel='shortcut icon' type='image/x-icon' href='favicon.ico' />
         <link rel="stylesheet" href="../nonprofits.css">
         <!-- Font Awesome -->
         <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
@@ -216,13 +215,6 @@ function buildPage(repoConfig, contributors) {
 /*
   File Processing
 */
-function writeHtmlFile(html) {
-  const newPath = path.join(__dirname, '/views/index.html');
-  fs.writeFile(newPath, html, 'utf-8', err => {
-    if (err) throw err;
-  });
-}
-
 function base64EncodeString(string) {
   return new Buffer(string).toString('base64');
 }
