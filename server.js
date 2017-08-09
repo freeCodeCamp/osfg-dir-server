@@ -1,13 +1,4 @@
-/**
-* NOTICE: the open-source-for-good-directory does not have a server Back-end.
-* This is the reference code for a remote server that receives GitHub WebHooks.
-* WORKING MODEL: The WebHook registers push events for all freeCodeCamp repos. 
-* Then, it sends a POST request (URL/event) to a server hosted in Glitch.com
-* If there is an update to the configuration file '.osfg-dir-config.js', it 
-* downloads the file and builds an HTML file that is pushed to the
-* open-source-for-good-directory repo inside the 'docs' folder.
-* Everything inside this folder is automatically deployed to GitHub Pages.
-*/
+/* eslint-disable max-len */
 
 require('dotenv').config();
 const express = require('express');
@@ -28,7 +19,7 @@ app.use(bodyParser.json());
 const configFile = '.osfg-dir-config.js';
 
 // Listenning for the Github WebHook
-app.post('/event', (req, res) => {
+app.post('/event', (req, res) => { // eslint-disable-line no-unused-vars
   if (
     verifySignature(req.body, req.headers) &&
     wasConfigUpdated(req.body, configFile)
@@ -40,16 +31,16 @@ app.post('/event', (req, res) => {
       .then(res => res.text())
       // Fetch Contributors
       .then(repoConfigFile => {
-        repoConfig = eval(repoConfigFile);
+        repoConfig = eval(repoConfigFile); // eslint-disable-line no-eval
         repoConfig.url = getRepoURL(req.body);
- 
+
         const contributorsURL = getContributorsURL(req.body);
         /* Header Inclusion mandatory for the 
            GitHub API https://developer.github.com/v3/#user-agent-required */
         const reqOptions = {
           headers: {
-            'User-Agent': 'open-source-for-good-directory',
-          },
+            'User-Agent': 'open-source-for-good-directory'
+          }
         };
         return fetch(contributorsURL, reqOptions);
       })
@@ -61,16 +52,13 @@ app.post('/event', (req, res) => {
         const contributorsHTML = buildContributorsHtml(contributorsData);
         const repoName = req.body.repository.name;
         const page = buildPage(repoConfig, contributorsHTML);
+        // eslint-disable-next-line camelcase
         const formattedPage = htmlAutoFormat(page, { indent_size: 2 });
 
         /*
           Processing the File
         */
         const encodedPage = base64EncodeString(formattedPage);
-
-        /* 
-          Pushing to GitHub Repo
-        */
         pushFileToRepo(encodedPage, repoName.toLowerCase());
       })
       .catch(err => {
@@ -102,14 +90,18 @@ function verifySignature(body, headers) {
 function wasConfigUpdated(body, configFile) {
   // Checks Modifications to the README.md file in the Master Branch
   let test = false;
-  const isMasterBranch = /master$/.test(body.ref);
+  const isMasterBranch = (/master$/).test(body.ref);
   if (isMasterBranch) {
     body.commits.forEach(commit => {
       commit.added.forEach(file => {
-        if (file === configFile) test = true;
+        if (file === configFile) {
+          test = true;
+        }
       });
       commit.modified.forEach(file => {
-        if (file === configFile) test = true;
+        if (file === configFile) {
+           test = true;
+        }
       });
     });
   }
@@ -226,8 +218,8 @@ function pushFileToRepo(webPage, repo) {
   const fileURL = `https://api.github.com/repos/freecodecamp/open-source-for-good-directory/contents/docs/${repo}/index.html`;
   const options = {
     headers: {
-      'User-Agent': 'osfg-request',
-    },
+      'User-Agent': 'osfg-request'
+    }
   };
 
   /*
@@ -241,7 +233,7 @@ function pushFileToRepo(webPage, repo) {
       const options = {
         headers: {
           'User-Agent': 'osfg-request',
-          Authorization: `token ${process.env.GITHUB_TOKEN}`,
+          Authorization: `token ${process.env.GITHUB_TOKEN}`
         },
         method: 'PUT',
         body: JSON.stringify({
@@ -250,11 +242,11 @@ function pushFileToRepo(webPage, repo) {
           message: `Camper Bot updating README.md for ${repo}`,
           committer: {
             name: 'Camper Bot',
-            email: 'placeholder@test.com',
+            email: 'placeholder@test.com'
           },
           content: webPage,
-          branch: 'master',
-        }),
+          branch: 'master'
+        })
       };
       return fetch(fileURL, options);
     })
@@ -268,7 +260,7 @@ function pushFileToRepo(webPage, repo) {
         log = {
           message: 'Invalid response from GitHub file creation',
           status: res.statusText,
-          code: res.status,
+          code: res.status
         };
       }
       console.log(log);

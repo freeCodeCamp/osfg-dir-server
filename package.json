@@ -14,7 +14,10 @@
     "showdown": "^1.7.1",
     "verify-github-webhook": "^1.0.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "eslint": "^4.4.1",
+    "eslint-plugin-prefer-object-spread": "^1.2.1"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
@@ -26,8 +29,8 @@
     "type": "git",
     "url": "git+https://github.com/juandaco/osfg-dir-server"
   },
-  "author": "Juan D. Acosta",
-  "license": "BSD 3",
+  "author": "David Acosta",
+  "license": "BSD-3-Clause",
   "bugs": {
     "url": "https://github.com/juandaco/osfg-dir-server/issues"
   },
