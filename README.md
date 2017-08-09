@@ -1,4 +1,4 @@
-# Server for the Open Source for Good Directory
+# Open Source for Good Directory Server
 
 This repo contains the server code for the open-source-for-good-directory. The directory depends on a remote server to perform an automated webpage build for each project that requires it. (Not a Back-end server)
 
