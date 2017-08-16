@@ -27,12 +27,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/juandaco/osfg-dir-server"
+    "url": "git+https://github.com/freeCodeCamp/osfg-dir-server"
   },
   "author": "David Acosta",
   "license": "BSD-3-Clause",
   "bugs": {
-    "url": "https://github.com/juandaco/osfg-dir-server/issues"
+    "url": "https://github.com/freeCodeCamp/osfg-dir-server/issues"
   },
-  "homepage": "https://github.com/juandaco/osfg-dir-server#readme"
+  "homepage": "https://github.com/freeCodeCamp/osfg-dir-server#readme"
 }
